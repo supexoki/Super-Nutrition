@@ -4,6 +4,13 @@
 #include <allegro5\allegro_ttf.h>
 #include <allegro5\allegro_image.h>
 #include "objects.h"
+#include <allegro5\allegro_acodec.h>
+#include <allegro5\allegro_audio.h>
+
+
+
+
+
 
 //1500 por 800
 //Variáveis globais
@@ -157,6 +164,7 @@ int main(void)
 	ALLEGRO_DISPLAY* display = NULL;
 	ALLEGRO_EVENT_QUEUE* event_queue = NULL;
 	ALLEGRO_TIMER* timer = NULL;
+	ALLEGRO_SAMPLE* sample = NULL;
 	ALLEGRO_FONT* font18 = NULL;
 	ALLEGRO_FONT* font19 = NULL;
 	ALLEGRO_FONT* font20 = NULL;
@@ -193,6 +201,12 @@ int main(void)
 	al_init_font_addon();
 	al_init_ttf_addon();
 	al_init_image_addon();
+	al_install_audio();
+	al_init_acodec_addon();
+
+	al_reserve_samples(1);
+
+	sample = al_load_sample("8bit.ogg");
 
 	
 
@@ -247,6 +261,8 @@ int main(void)
 	al_register_event_source(event_queue, al_get_keyboard_event_source());
 	al_register_event_source(event_queue, al_get_timer_event_source(timer));
 	al_register_event_source(event_queue, al_get_display_event_source(display));
+
+	al_play_sample(sample, 1, 0, 1, ALLEGRO_PLAYMODE_LOOP, NULL);
 
 	al_start_timer(timer);
 
@@ -450,7 +466,7 @@ int main(void)
 		}
 
 	}
-
+	al_destroy_sample(sample);
 	al_destroy_display(display);
 	al_destroy_event_queue(event_queue);
 	al_destroy_timer(timer);
